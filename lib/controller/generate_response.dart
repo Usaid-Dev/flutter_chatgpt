@@ -23,8 +23,13 @@ Future<String> generateResponse(String prompt) async {
     }),
   );
 
-  // Do something with the response
-  Map<String, dynamic> newresponse = jsonDecode(response.body);
-  print(newresponse);
-  return newresponse['choices'][0]['text'];
+  if (response.statusCode == 200) {
+    Map<String, dynamic> newresponse = jsonDecode(response.body);
+    return newresponse['choices'][0]['text'];
+  }
+
+  return {
+    "error": "Cannot catch data",
+    "statusCode": response.statusCode,
+  }.toString();
 }

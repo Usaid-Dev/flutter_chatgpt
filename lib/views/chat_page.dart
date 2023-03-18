@@ -32,32 +32,21 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         toolbarHeight: 70,
-        title: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            "OpenAI ChatGPT",
-            textAlign: TextAlign.center,
+        elevation: 2,
+        title: const Text(
+          "ChatGPT",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.6,
           ),
         ),
-        backgroundColor: botBackgroundColor,
       ),
-      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: _buildList(),
-            ),
-            Visibility(
-              visible: isLoading,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -78,7 +67,6 @@ class _ChatPageState extends State<ChatPage> {
     return Visibility(
       visible: !isLoading,
       child: IconButton(
-        color: Colors.white,
         icon: const Icon(
           Icons.send_rounded,
         ),
@@ -94,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
               isLoading = true;
             },
           );
-          var input = _textController.text;
+          final input = _textController.text;
           _textController.clear();
           Future.delayed(const Duration(milliseconds: 50))
               .then((_) => _scrollDown());
@@ -110,8 +98,9 @@ class _ChatPageState extends State<ChatPage> {
             });
           });
           _textController.clear();
-          Future.delayed(const Duration(milliseconds: 50))
-              .then((_) => _scrollDown());
+          Future.delayed(const Duration(milliseconds: 50)).then(
+            (_) => _scrollDown(),
+          );
         },
       ),
     );
@@ -119,19 +108,20 @@ class _ChatPageState extends State<ChatPage> {
 
   Expanded _buildInput() {
     return Expanded(
-      child: TextField(
-        textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(color: Colors.white),
-        controller: _textController,
-        decoration: const InputDecoration(
-            fillColor: botBackgroundColor,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(90),
+        child: TextField(
+          enabled: !isLoading,
+          textCapitalization: TextCapitalization.sentences,
+          controller: _textController,
+          decoration: InputDecoration(
             filled: true,
+            fillColor:
+                Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
             border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            hintText: 'Write something here . .'),
+            hintText: isLoading ? 'Loading ...' : 'Write something here . . .',
+          ),
+        ),
       ),
     );
   }
@@ -139,13 +129,21 @@ class _ChatPageState extends State<ChatPage> {
   ListView _buildList() {
     return ListView.builder(
       controller: _scrollController,
-      itemCount: _messages.length,
+      itemCount: isLoading ? _messages.length + 1 : _messages.length,
       itemBuilder: (context, index) {
-        var message = _messages[index];
-        return ChatMessageWidget(
-          text: message.text,
-          chatMessageType: message.chatMessageType,
-        );
+        try {
+          var message = _messages[index];
+          return ChatMessageWidget(
+            text: message.text,
+            chatMessageType: message.chatMessageType,
+          );
+        } catch (e) {
+          return const ChatMessageWidget(
+            text: "Loading ...",
+            loading: true,
+            chatMessageType: ChatMessageType.bot,
+          );
+        }
       },
     );
   }
