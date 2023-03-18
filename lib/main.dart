@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/constant.dart';
+import 'package:http/http.dart' as http;
 import 'model.dart';
 
 void main() {
@@ -41,6 +44,33 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     isLoading = false;
+  }
+
+  Future<String> generateResponse(String promt) async {
+    final apikey = apiSecretKey;
+
+    var url = Uri.https('api.openai.com', '/v1completions');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application.json',
+        'Authorization': 'Bearer $apikey'
+      },
+      body: jsonEncode(
+        {
+          'model': 'text-davinci-003',
+          'prompt': promt,
+          'temperature': 0,
+          'max_token': 2000,
+          'top_p': 1,
+          'frequency_penalty': 0.0,
+          'presence_penalty': 0.0,
+        },
+      ),
+    );
+    Map<String, dynamic> newresponse = jsonDecode(response.body);
+    return newresponse['choices'][0]['text'];
   }
 
   @override
@@ -122,9 +152,33 @@ class _ChatPageState extends State<ChatPage> {
               1,
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            setState(
+              () {
+                _messages.add(
+                  ChatMessage(
+                    text: _textController.text,
+                    chatMessageType: ChatMessageType.user,
+                  ),
+                );
+                isLoading = true;
+              },
+            );
+            var input = _textController.text;
+            _textController.clear();
+            Future.delayed(const Duration(milliseconds: 50))
+                .then((value) => _scrollDown());
+          },
         ),
       ),
+    );
+  }
+
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 
