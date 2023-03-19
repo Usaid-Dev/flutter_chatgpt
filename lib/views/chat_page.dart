@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/views/widgets/chat_message.dart';
-import '../constant/colors.dart';
 import '../controller/generate_response.dart';
 import '../model/model.dart';
 
@@ -32,6 +31,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         toolbarHeight: 70,
         elevation: 2,
         title: const Text(

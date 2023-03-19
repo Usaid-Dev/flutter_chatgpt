@@ -25,7 +25,7 @@ class ChatMessageWidget extends StatelessWidget {
         children: <Widget>[
           chatMessageType == ChatMessageType.bot
               ? Container(
-                  margin: const EdgeInsets.only(right: 16.0),
+                  margin: const EdgeInsets.only(right: 16, top: 55),
                   child: CircleAvatar(
                     backgroundColor: const Color.fromRGBO(16, 163, 127, 1),
                     child: Image.asset(
@@ -63,9 +63,12 @@ class ChatMessageWidget extends StatelessWidget {
                         .onBackground
                         .withOpacity(0.5),
                     highlightColor: Colors.yellow,
-                    child: Text(
-                      'Loading ...',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 55),
+                      child: Text(
+                        'Loading ...',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
                   ),
               ],
