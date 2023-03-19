@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../constant/colors.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../model/model.dart';
 
 class ChatMessageWidget extends StatelessWidget {
-  const ChatMessageWidget(
-      {super.key, required this.text, required this.chatMessageType});
+  final bool loading;
+
+  const ChatMessageWidget({
+    super.key,
+    required this.text,
+    required this.chatMessageType,
+    this.loading = false,
+  });
 
   final String text;
   final ChatMessageType chatMessageType;
@@ -12,11 +18,8 @@ class ChatMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
       padding: const EdgeInsets.all(16),
-      color: chatMessageType == ChatMessageType.bot
-          ? botBackgroundColor
-          : backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -42,19 +45,29 @@ class ChatMessageWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                if (!loading)
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    child: Text(
+                      text,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
-                  child: Text(
-                    text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: Colors.white),
+                if (loading)
+                  Shimmer.fromColors(
+                    baseColor: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.5),
+                    highlightColor: Colors.yellow,
+                    child: Text(
+                      'Loading ...',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
