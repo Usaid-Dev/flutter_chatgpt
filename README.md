@@ -1,16 +1,30 @@
-# flutter_chatgpt
+# Flutter_Chatgpt
 
-A new Flutter project.
+A completely responsive Chatgpt App- Works on Android & IOS
 
-## Getting Started
+### How to configure
+```dart
+// Replace the API key in this file /lib/constant/api_key.dart
 
-This project is a starting point for a Flutter application.
+const apikey = '<API_KEY_HERE>';
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Screenshots of App
+<table>
+<tr>
+<th>
+Loading Response
+</th>
+<th>
+Chatbot Response
+</th>
+</tr>
+<tr>
+<td>
+<img src="https://user-images.githubusercontent.com/67046451/226329526-4b9ff533-89eb-4924-8f48-f1492f8f4441.png">
+</td>
+<td>
+<img src="https://user-images.githubusercontent.com/67046451/226330129-206cfbdc-7985-4408-80a8-03f7f158a52f.png">
+</td>
+</tr>
+</table>
